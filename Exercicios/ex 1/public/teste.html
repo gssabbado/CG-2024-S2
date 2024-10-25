@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebGL Clown</title>
+  <style>
+    body { margin: 0; }
+    canvas { width: 100vw; height: 100vh; display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="glcanvas"></canvas>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+  <script>
+    const vertexShaderSource = `
+      attribute vec3 aPosition;
+      uniform mat4 uModelViewMatrix;
+      uniform mat4 uProjectionMatrix;
+      void main(void) {
+        gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aPosition, 1.0);
+      }
+    `;
+
+    const fragmentShaderSource = `
+      precision mediump float;
+      uniform vec4 uColor;
+      void main(void) {
+        gl_FragColor = uColor;
+      }
+    `;
+
+    function initShaderProgram(gl, vsSource, fsSource) {
+      const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+      const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+      const shaderProgram = gl.createProgram();
+      gl.attachShader(shaderProgram, vertexShader);
+      gl.attachShader(shaderProgram, fragmentShader);
+      gl.linkProgram(shaderProgram);
+
+      if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+        console.error('Unable to initialize the shader program:', gl.getProgramInfoLog(shaderProgram));
+        return null;
+      }
+      return shaderProgram;
+    }
+
+    function loadShader(gl, type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error('An error occurred compiling the shaders:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+      }
+      return shader;
+    }
+
+    function main() {
+      const canvas = document.getElementById('glcanvas');
+      const gl = canvas.getContext('webgl');
+
+      if (!gl) {
+        console.error('WebGL not supported');
+        return;
+      }
+
+      const shaderProgram = initShaderProgram(gl, vertexShaderSource, fragmentShaderSource);
+      const programInfo = {
+        program: shaderProgram,
+        attribLocations: {
+          aPosition: gl.getAttribLocation(shaderProgram, 'aPosition'),
+        },
+        uniformLocations: {
+          uModelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+          uProjectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
+          uColor: gl.getUniformLocation(shaderProgram, 'uColor'),
+        },
+      };
+
+      const buffers = initBuffers(gl);
+
+      function render() {
+        gl.clearColor(0.8, 0.9, 1.0, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        const fieldOfView = 45 * Math.PI / 180;
+        const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+        const zNear = 0.1;
+        const zFar = 100.0;
+        const projectionMatrix = mat4.create();
+        mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+
+        const modelViewMatrix = mat4.create();
+        mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -6.0]);
+
+        // Cabeça
+        const headMatrix = mat4.clone(modelViewMatrix);
+        mat4.translate(headMatrix, headMatrix, [0.0, 1.0, 0.0]);
+        drawSphere(gl, programInfo, buffers.head, headMatrix, projectionMatrix, [1.0, 0.8, 0.6, 1.0]);
+
+        // Nariz
+        const noseMatrix = mat4.clone(headMatrix);
+        mat4.translate(noseMatrix, noseMatrix, [0.0, -0.1, 0.5]);
+        drawSphere(gl, programInfo, buffers.nose, noseMatrix, projectionMatrix, [1.0, 0.2, 0.2, 1.0]);
+
+        // Corpo
+        const bodyMatrix = mat4.clone(modelViewMatrix);
+        mat4.translate(bodyMatrix, bodyMatrix, [0.0, -0.5, 0.0]);
+        drawCylinder(gl, programInfo, buffers.body, bodyMatrix, projectionMatrix, [0.2, 0.2, 1.0, 1.0]);
+
+        // Braços (simplesmente cilindros para cada braço)
+        for (let i = -1; i <= 1; i += 2) {
+          const armMatrix = mat4.clone(bodyMatrix);
+          mat4.translate(armMatrix, armMatrix, [i * 0.6, 0.4, 0.0]);
+          mat4.rotateZ(armMatrix, armMatrix, Math.PI / 6 * i);
+          drawCylinder(gl, programInfo, buffers.arm, armMatrix, projectionMatrix, [1.0, 0.0, 0.0, 1.0]);
+        }
+
+        // Pernas
+        for (let i = -0.3; i <= 0.3; i += 0.6) {
+          const legMatrix = mat4.clone(bodyMatrix);
+          mat4.translate(legMatrix, legMatrix, [i, -0.7, 0.0]);
+          drawCylinder(gl, programInfo, buffers.leg, legMatrix, projectionMatrix, [0.0, 0.0, 1.0, 1.0]);
+        }
+
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
+    }
+
+    function initBuffers(gl) {
+      const headBuffer = initSphereBuffer(gl, 0.4);
+      const noseBuffer = initSphereBuffer(gl, 0.1);
+      const bodyBuffer = initCylinderBuffer(gl, 0.3, 1.0);
+      const armBuffer = initCylinderBuffer(gl, 0.1, 0.5);
+      const legBuffer = initCylinderBuffer(gl, 0.1, 0.5);
+
+      return {
+        head: headBuffer,
+        nose: noseBuffer,
+        body: bodyBuffer,
+        arm: armBuffer,
+        leg: legBuffer,
+      };
+    }
+
+    function initSphereBuffer(gl, radius) {
+      const positions = [];
+      for (let i = 0; i <= 30; i++) {
+        const lat = (i / 30) * Math.PI;
+        for (let j = 0; j <= 30; j++) {
+          const lon = (j / 30) * 2 * Math.PI;
+          const x = radius * Math.sin(lat) * Math.cos(lon);
+          const y = radius * Math.cos(lat);
+          const z = radius * Math.sin(lat) * Math.sin(lon);
+          positions.push(x, y, z);
+        }
+      }
+      const positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+      return positionBuffer;
+    }
+
+    function initCylinderBuffer(gl, radius, height) {
+      const positions = [
+        -radius, -height / 2, 0.0,
+         radius, -height / 2, 0.0,
+         radius,  height / 2, 0.0,
+        -radius,  height / 2, 0.0,
+      ];
+      const positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+      return positionBuffer;
+    }
+
+    function drawSphere(gl, programInfo, buffer, modelViewMatrix, projectionMatrix, color) {
+      drawShape(gl, programInfo, buffer, modelViewMatrix, projectionMatrix, color, 961);
+    }
+
+    function drawCylinder(gl, programInfo, buffer, modelViewMatrix, projectionMatrix, color) {
+      drawShape(gl, programInfo, buffer, modelViewMatrix, projectionMatrix, color, 4);
+    }
+
+    function drawShape(gl, programInfo, buffer, modelViewMatrix, projectionMatrix, color, vertexCount) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.vertexAttribPointer(programInfo.attribLocations.aPosition, 3, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(programInfo.attribLocations.aPosition);
+
+      gl.useProgram(programInfo.program);
+
+      gl.uniformMatrix4fv(programInfo.uniformLocations.uModelViewMatrix, false, modelViewMatrix);
+      gl.uniformMatrix4fv(programInfo.uniformLocations.uProjectionMatrix, false, projectionMatrix);
+      gl.uniform4fv(programInfo.uniformLocations.uColor, color);
+
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexCount);
+    }
+
+    main();
+  </script>
+</body>
+</html>
