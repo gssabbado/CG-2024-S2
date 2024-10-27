@@ -41,16 +41,144 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 
 n=100;
 
-/*gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setCircleVertices(gl,n,0.2, -0.55, -0.25);
+// Pétalas (base)
+
+// Norte
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setTrapezoidVertices(gl, 0.0, 0.12, 0.4, 0.1, 0.5, 0.0);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setRectangleColor(gl,[0.5, 0.5, 0.5]);
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+// Noroeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setTrapezoidVertices(gl, -0.1, 0.09, 0.4, 0.1, 0.5, (Math.PI)/4);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setRectangleColor(gl,[Math.random(), Math.random(), Math.random()]);
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+// Oeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setTrapezoidVertices(gl, -0.12, 0.0, 0.4, 0.1, 0.5, Math.PI/2);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setRectangleColor(gl,[Math.random(), Math.random(), Math.random()]);
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+// Sudoeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setTrapezoidVertices(gl, -0.1, -0.11, 0.4, 0.1, 0.5, (3*Math.PI)/4);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setRectangleColor(gl,[Math.random(), Math.random(), Math.random()]);
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+// Sul
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setTrapezoidVertices(gl, 0.0, -0.14, 0.4, 0.1, 0.5, Math.PI);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setRectangleColor(gl,[Math.random(), Math.random(), Math.random()]);
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+// Sudeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setTrapezoidVertices(gl, 0.1, -0.11, 0.4, 0.1, 0.5, (5*Math.PI)/4);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setRectangleColor(gl,[Math.random(), Math.random(), Math.random()]);
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+// Leste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setTrapezoidVertices(gl, 0.12, 0.0, 0.4, 0.1, 0.5, (3*Math.PI)/2);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setRectangleColor(gl,[Math.random(), Math.random(), Math.random()]);
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+// Nordeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setTrapezoidVertices(gl, 0.1, 0.11, 0.4, 0.1, 0.5, (7*Math.PI)/4);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setRectangleColor(gl,[Math.random(), Math.random(), Math.random()]);
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+
+// Pétalas (Ponta)
+
+// Norte
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices3(gl, n,0.2, 0.0, 0.6, 0.0); 
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [Math.random(),Math.random(),Math.random()]); 
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
+
+
+// Noroeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices3(gl, n,0.2, -0.45, 0.44, Math.PI/4); 
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [Math.random(),Math.random(),Math.random()]); 
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
+
+// Oeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices3(gl, n,0.2, -0.61, 0.0, Math.PI/2); 
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [Math.random(),Math.random(),Math.random()]); 
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
+
+// Sudoeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices3(gl, n,0.2, -0.45, -0.46, (3*Math.PI)/4); 
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [Math.random(),Math.random(),Math.random()]); 
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
+
+// Sul
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices3(gl, n,0.2, 0.0, -0.627, Math.PI); 
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [Math.random(),Math.random(),Math.random()]); 
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
+
+// Sudeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices3(gl, n,0.2, 0.45, -0.46, (5*Math.PI)/4); 
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [Math.random(),Math.random(),Math.random()]); 
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
+
+// Leste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices3(gl, n,0.2, 0.61, 0.0, (3*Math.PI)/2); 
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [Math.random(),Math.random(),Math.random()]); 
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
+
+
+// Nordeste
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices3(gl, n,0.2, 0.45, 0.46, (7*Math.PI)/4); 
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [Math.random(),Math.random(),Math.random()]); 
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
+
+
+// Centro
+gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
+setCircleVertices(gl,n,0.2, 0.0, 0.0);
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 setCircleColor(gl,n,[Math.random(),Math.random(),Math.random()]);
 gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-*/
 
+
+/*gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices3(gl, n,0.5, 0.0, -0.1, Math.PI/4); 
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [0.17, 0.356, 0.530]); 
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
+*/
+/*
 // semi circulo (parte de cima)
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices3(gl, n,0.5, 0.0, -0.1); 
+setSemiCircleVertices3(gl, n,0.5, 0.0, -0.1, Math.PI/4); 
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 setCircleColor(gl, n, [0.17, 0.356, 0.530]); 
 gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
@@ -71,95 +199,12 @@ setRectangleColor(gl,[0.17, 0.356, 0.530]);
 gl.drawArrays(gl.TRIANGLES, 0, 6);
 
 
-// retangulo (corpo)
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setRectangleVertices(gl,-0.5,-0.55,1.0,0.5);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setRectangleColor(gl,[0.17, 0.356, 0.530]);
-gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-// retangulo (maçaneta)
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setRectangleVertices(gl,-0.15,-0.2,0.1,0.04);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setRectangleColor(gl,[0.75, 0.75, 0.75]);
-gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-
-
-
-// semi circulo (frente do carro)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices1(gl, n,0.25, -0.48, -0.30); // 30 segmentos para o semicírculo
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.17, 0.356, 0.530]); // Cor aleatória
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1); // 31 vértices (1 centro + 30 vértices)
-
-
-// semi circulo (frente do carro embaixo)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices1(gl, n,0.05, -0.69, -0.50); // 30 segmentos para o semicírculo
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.7, 0.556, 0.530]); // Cor aleatória
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1); // 31 vértices (1 centro + 30 vértices)
-
-
-// semi circulo (atras do carro embaixo)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices2(gl, n,0.05, 0.69, -0.50); // 30 segmentos para o semicírculo
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.7, 0.556, 0.530]); // Cor aleatória
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1); // 31 vértices (1 centro + 30 vértices)
-
-// semi circulo (atras do carro)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices2(gl, n,0.25, 0.48, -0.30); // 30 segmentos para o semicírculo
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.17, 0.356, 0.530]); // Cor aleatória
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1); // 31 vértices (1 centro + 30 vértices)
-
-
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setRectangleVertices(gl,-0.7,-0.55,1.4,0.1);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setRectangleColor(gl, [0.7, 0.556, 0.530]);
-gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setCircleVertices(gl,n,0.07, -0.65, -0.3);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[0.9,0.2,0.2]);
-gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-
-
-
-//------ rodas
-
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setCircleVertices(gl,n,0.2, -0.35, -0.5);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[0.1, 0.1, 0.1]);
-gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setCircleVertices(gl,n,0.2, 0.35, -0.5);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[0.1, 0.1, 0.1]);
-gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setCircleVertices(gl,n,0.1, -0.35, -0.5);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[0.5, 0.5, 0.5]);
-gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-
 gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
 setCircleVertices(gl,n,0.1, 0.35, -0.5);
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 setCircleColor(gl,n,[0.5, 0.5, 0.5]);
 gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-
+*/
 }
 
 function createShader(gl, type, source) {
@@ -189,6 +234,15 @@ function createProgram(gl, vertexShader, fragmentShader) {
   gl.deleteProgram(program);
 }
 
+function rotatePoint(x, y, angle) {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return [
+    x * cos - y * sin,
+    x * sin + y * cos
+  ];
+}
+
 function setRectangleVertices(gl, x, y, width, height) {
   var x1 = x;
   var x2 = x + width;
@@ -211,6 +265,34 @@ function setRectangleColor(gl,color) {
       colorData.push(...color);
   }
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorData), gl.STATIC_DRAW);
+}
+
+// Função para definir os vértices do trapézio rotacionado
+function setTrapezoidVertices(gl, x, y, baseTop, baseBottom, height, angle) {
+  // Calcula as posições iniciais dos vértices do trapézio sem rotação
+  const x1 = x - baseBottom / 2;
+  const x2 = x + baseBottom / 2;
+  const x3 = x - baseTop / 2;
+  const x4 = x + baseTop / 2;
+  const y1 = y;
+  const y2 = y + height;
+
+  // Aplica a rotação para cada vértice em torno do ponto central (x, y)
+  const [x1r, y1r] = rotatePoint(x1 - x, y1 - y, angle);
+  const [x2r, y2r] = rotatePoint(x2 - x, y1 - y, angle);
+  const [x3r, y3r] = rotatePoint(x3 - x, y2 - y, angle);
+  const [x4r, y4r] = rotatePoint(x4 - x, y2 - y, angle);
+
+  // Adiciona os vértices rotacionados ao buffer de dados
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    x1r + x, y1r + y, // Vértice inferior esquerdo
+    x2r + x, y2r + y, // Vértice inferior direito
+    x3r + x, y3r + y, // Vértice superior esquerdo
+
+    x3r + x, y3r + y, // Vértice superior esquerdo
+    x2r + x, y2r + y, // Vértice inferior direito
+    x4r + x, y4r + y  // Vértice superior direito
+  ]), gl.STATIC_DRAW);
 }
 
 function setCircleVertices(gl,n,radius, centerX, centerY){
@@ -274,7 +356,7 @@ function setSemiCircleVertices2(gl, n, radius, centerX, centerY) {
 }
 
 // Função para definir vértices do semicírculo (0 a 180)
-function setSemiCircleVertices3(gl, n, radius, centerX, centerY) {
+function setSemiCircleVertices3(gl, n, radius, centerX, centerY, rotationAngle) {
   let center = [centerX, centerY]; // Centro do semicírculo
   let vertexData = [];
 
@@ -286,14 +368,14 @@ function setSemiCircleVertices3(gl, n, radius, centerX, centerY) {
     let angle = (i * Math.PI) / n; 
     let x = centerX + radius * Math.cos(angle);
     let y = centerY + radius * Math.sin(angle);
-    vertexData.push(x, y);
+    let [rotatedX, rotatedY] = rotatePoint(x - centerX, y - centerY, rotationAngle)
+    vertexData.push(rotatedX + centerX, rotatedY + centerY);
   }
+
 
   // Envia os dados dos vértices para o buffer
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.STATIC_DRAW);
 }
-
-
 
 
 main();

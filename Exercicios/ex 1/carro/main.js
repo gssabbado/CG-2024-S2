@@ -118,7 +118,7 @@ gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 setCircleColor(gl, n, [0.17, 0.356, 0.530]); // Cor aleatória
 gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1); // 31 vértices (1 centro + 30 vértices)
 
-
+// retangulo (maçaneta)
 gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
 setRectangleVertices(gl,-0.7,-0.55,1.4,0.1);
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
@@ -126,11 +126,21 @@ setRectangleColor(gl, [0.7, 0.556, 0.530]);
 gl.drawArrays(gl.TRIANGLES, 0, 6);
 
 
+
+// circulo (farol dianteiro)
 gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
 setCircleVertices(gl,n,0.07, -0.65, -0.3);
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[0.9,0.2,0.2]);
+setCircleColor(gl,n,[0.9,0.9,0.9]);
 gl.drawArrays(gl.TRIANGLES, 0, 3*n);
+
+
+// semi circulo (farol traseiro)
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setSemiCircleVertices2(gl, n,0.07, 0.65, -0.3); // 30 segmentos para o semicírculo
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setCircleColor(gl, n, [0.9, 0.2, 0.2]); // Cor aleatória
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1); // 31 vértices (1 centro + 30 vértices)
 
 
 
@@ -292,8 +302,6 @@ function setSemiCircleVertices3(gl, n, radius, centerX, centerY) {
   // Envia os dados dos vértices para o buffer
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.STATIC_DRAW);
 }
-
-
 
 
 main();
