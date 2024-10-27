@@ -41,11 +41,19 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 
 n=100;
 
+// Cabo
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+setTrapezoidVertices(gl, -0.3, -1.1, 0.07, 0.07, 1.0, -0.25);
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+setRectangleColor(gl,[0.0, 0.8, 0.0]);
+gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+
 // Pétalas (base)
-/*
+
 // Norte
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setTrapezoidVertices(gl, 0.0, 0.12, 0.4, 0.1, 0.5, 0.0);
+setTrapezoidVertices(gl, -0., 0.12, 0.4, 0.1, 0.5, 0.0);
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 setRectangleColor(gl,[0.9, 0.8, 0.0]);
 gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -160,118 +168,13 @@ gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 setCircleColor(gl, n, [0.9, 0.8, 0.0]); 
 gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
 
-*/
 
-// Orelha Esquerda
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices3(gl, n,0.2, -0.55, 0.0, Math.PI/2); 
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.9, 0.8, 0.9]); 
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
-
-// Orelha Direita
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices3(gl, n,0.2, 0.55, 0.0, (3*Math.PI)/2); 
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.9, 0.8, 0.9]); 
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
-
-
-// Rosto
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setCircleVertices(gl,n,0.6, 0.0, 0.0);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[0.75, 0.75, 0.75]);
-gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-
-// Maquiagem olho esquerdo
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setDiamondVertices(gl, -0.25,  0.25, 0.35, 0.55, 0.0);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setRectangleColor(gl,[0.9, 0.8, 0.0]);
-gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-// Olho esquerdo
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setCircleVertices(gl,n,0.1, -0.25, 0.25);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[Math.random(), Math.random(), Math.random()]);
-gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-
-// Maquiagem olho direito
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setDiamondVertices(gl, 0.25,  0.25, 0.35, 0.55, 0.0);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setRectangleColor(gl,[0.9, 0.8, 0.0]);
-gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-
-// Olho direito
-gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setCircleVertices(gl,n,0.1, 0.25, 0.25);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[Math.random(), Math.random(), Math.random()]);
-gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-
-// Nariz
+// Centro
 gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
 setCircleVertices(gl,n,0.2, 0.0, 0.0);
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[Math.random(), Math.random(), Math.random()]);
+setCircleColor(gl,n,[0.75, 0.5, 0.0]);
 gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-
-// Boca
-
-// Trapezio (base)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setTrapezoidVertices(gl, 0.0, -0.30, 0.1, 0.4, 0.2, Math.PI);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setRectangleColor(gl,[0.9, 0.8, 0.0]);
-gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setTrapezoidVertices(gl, 0.0, -0.35, 0.05, 0.2, 0.1, Math.PI);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setRectangleColor(gl,[0.9, 0.8, 0.9]);
-gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-// Baixo da boca
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices3(gl, n,0.1, 0.0, -0.427, Math.PI); 
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.9, 0.8, 0.0]); 
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
-
-// canto esquerdo (parte de cima)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices3(gl, n,0.037, -0.16, -0.32, 0.0); 
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.9, 0.8, 0.0]); 
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
-
-// canto esquerdo (parte da esquerda)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices3(gl, n,0.037, -0.16, -0.32, Math.PI/2); 
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.9, 0.8, 0.0]); 
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
-
-// canto direito (parte de cima)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices3(gl, n,0.037, 0.16, -0.32, 0.0); 
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.9, 0.8, 0.0]); 
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
-
-// canto direito (parte da direita)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-setSemiCircleVertices3(gl, n,0.037, 0.16, -0.32, (3*Math.PI)/2); 
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl, n, [0.9, 0.8, 0.0]); 
-gl.drawArrays(gl.TRIANGLE_FAN, 0, n + 1);
-
-
-
 
 
 
@@ -362,30 +265,6 @@ function setTrapezoidVertices(gl, x, y, baseTop, baseBottom, height, angle) {
     x3r + x, y3r + y, // Vértice superior esquerdo
     x2r + x, y2r + y, // Vértice inferior direito
     x4r + x, y4r + y  // Vértice superior direito
-  ]), gl.STATIC_DRAW);
-}
-
-function setDiamondVertices(gl, centerX, centerY, width, height, angle) {
-  const vertices = [
-    [centerX, centerY + height / 2],
-    [centerX + width / 2, centerY],
-    [centerX, centerY - height / 2],
-    [centerX - width / 2, centerY]
-  ];
-
-  const rotatedVertices = vertices.map(([x, y]) => {
-    const [xr, yr] = rotatePoint(x - centerX, y - centerY, angle);
-    return [xr + centerX, yr + centerY]
-  });
-
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-    ...rotatedVertices[0],
-    ...rotatedVertices[1],
-    ...rotatedVertices[2],
-
-    ...rotatedVertices[2],
-    ...rotatedVertices[3],
-    ...rotatedVertices[0]
   ]), gl.STATIC_DRAW);
 }
 
