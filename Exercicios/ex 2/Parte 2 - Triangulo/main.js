@@ -25,9 +25,7 @@ function main(){
   
   const matrixUniformLocation = gl.getUniformLocation(program, `matrix`);
   const colorUniformLocation = gl.getUniformLocation(program, `color`);
-  const pointSizeUniformLocation = gl.getUniformLocation(program, `pointSize`);
-
-
+  
   let matrix = [
       2/canvas.width, 0, 0, 0,
       0, -2/canvas.height, 0, 0,
@@ -44,10 +42,7 @@ function main(){
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positionVector), gl.STATIC_DRAW);
   let colorVector = [0.0,0.0,0.0];
   gl.uniform3fv(colorUniformLocation,colorVector);
-  let newPointSize = 5.0;
-  gl.uniform1f(pointSizeUniformLocation, newPointSize);
-
-
+  
   canvas.addEventListener("mousedown",mouseClick,false);
 
   let startPoint = [];
@@ -115,7 +110,6 @@ function main(){
   //bodyElement.addEventListener("keydown", change, false);
 
   let tipoDesenho = "r"; 
-  let modoSelecao = "k";
 
   function keyDown(event) {
     if (event.key === "r" || event.key === "R" || event.key === "t" || event.key === "T") {
@@ -133,7 +127,7 @@ function main(){
           tipoDesenho = "t";
           break;
         case "T":
-          gl.cleaer(gl.COLOR_BUFFER_BIT);
+          gl.clear(gl.COLOR_BUFFER_BIT);
           tipoDesenho = "T";
           break;
       }
@@ -141,11 +135,10 @@ function main(){
       startPoint = [];
       midPoint = [];
       endPoint = [];
+      console.log(tipoDesenho);
     }
-    if (event.key === "k" || event.key === "K") modoSelecao = event.key;
-    else if (event.key === "e" || event.key === "E") modoSelecao = event.key;
 
-    if ((modoSelecao === "k" || modoSelecao === "K") && (event.key === "0" || event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4" || event.key === "5" || event.key === "6" || event.key === "7" || event.key === "8" || event.key === "9")) {
+    if (event.key === "0" || event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4" || event.key === "5" || event.key === "6" || event.key === "7" || event.key === "8" || event.key === "9") {
       switch(event.key){
         case "0":
           colorVector = [0.0,0.0,0.0];
@@ -179,40 +172,6 @@ function main(){
           break;
       }
       gl.uniform3fv(colorUniformLocation,colorVector);
-      redraw(); 
-    }
-
-    if ((modoSelecao === "e" || modoSelecao === "E") && (event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4" || event.key === "5" || event.key === "6" || event.key === "7" || event.key === "8" || event.key === "9")) {
-      switch(event.key){
-        case "1":
-          newPointSize = 1.0;
-          break;
-        case "2":
-          newPointSize = 2.0;
-          break;
-        case "3":
-          newPointSize = 3.0;
-          break;
-        case "4":
-          newPointSize = 4.0;
-          break;
-        case "5":
-          newPointSize = 5.0;
-          break;
-        case "6":
-          newPointSize = 6.0;
-          break;
-        case "7":
-          newPointSize = 7.0;
-          break;
-        case "8":
-          newPointSize = 8.0;
-          break;
-        case "9":
-          newPointSize = 9.0;
-          break;
-      }
-      gl.uniform1f(pointSizeUniformLocation, newPointSize);
       redraw(); 
     }
   }
