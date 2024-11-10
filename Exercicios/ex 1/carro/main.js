@@ -41,12 +41,6 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 
 n=100;
 
-/*gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
-setCircleVertices(gl,n,0.2, -0.55, -0.25);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-setCircleColor(gl,n,[Math.random(),Math.random(),Math.random()]);
-gl.drawArrays(gl.TRIANGLES, 0, 3*n);
-*/
 
 // semi circulo (parte de cima)
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
