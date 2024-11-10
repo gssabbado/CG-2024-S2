@@ -51,7 +51,7 @@ function main(){
     let theta = 0.0;
     let tx = 0.0;
     let ty = 0.0;
-    let tx_step = 0.007;
+    let tx_step = 0.01;
     let ty_step = 0.02;
     let n = 50;
 
@@ -62,7 +62,7 @@ function main(){
 
 
         theta += 1.0;
-        if(tx > 0.5 || tx < -0.5)
+        if(tx > 1.0 || tx < -1.0)
           tx_step = -tx_step;
         tx += tx_step;
         //if(ty > 1.0 || ty < -1.0)
@@ -158,8 +158,8 @@ function main(){
 
 
 
-        //------ rodas
-
+        //------ rodas       
+        
         gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
         setCircleVertices(gl,n,0.2, -0.35, -0.5);
         gl.uniform3fv(colorUniformLocation, [0.1, 0.1, 0.1]);

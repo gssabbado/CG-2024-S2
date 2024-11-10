@@ -45,14 +45,15 @@ function main(){
   gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positionVector), gl.STATIC_DRAW);
   
-  let colorVector = [Math.random(),Math.random(),Math.random()];
-  gl.uniform3fv(colorUniformLocation,colorVector);
+  //let colorVector = [Math.random(),Math.random(),Math.random()];
+  //gl.uniform3fv(colorUniformLocation,colorVector);
 
   let theta = 0.0;
   let tx = 0.0;
   let ty = 0.0;
   let tx_step = 0.01;
   let ty_step = 0.02;
+  let n = 50;
 
   function drawSquare(){
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -65,12 +66,41 @@ function main(){
       ty_step = -ty_step;
     ty += ty_step;
 
-    matrix = m4.identity();
-    matrix = m4.translate(matrix,tx,ty,0.0);
-    matrix = m4.zRotate(matrix, degToRad(theta));
-    matrix = m4.scale(matrix,0.25,0.25,1.0);
-    gl.uniformMatrix4fv(matrixUniformLocation, false, matrix);
+    //matrix = m4.identity();
+    //matrix = m4.translate(matrix,tx,ty,0.0);
+    //matrix = m4.zRotate(matrix, degToRad(theta));
+    //matrix = m4.scale(matrix,0.25,0.25,1.0);
+    //gl.uniformMatrix4fv(matrixUniformLocation, false, matrix);
+    //gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    // Linha divisora
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    setTrapezoidVertices(gl, 0.0, -4.0, 0.05, 0.05, 8.0, 0);
+    gl.uniform3fv(colorUniformLocation, [0.2, 0.2, 0.2]);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+    
+    // Raquete esquerda
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    setTrapezoidVertices(gl, -3.45, -0.45, 0.15, 0.15, 1.0, 0);
+    gl.uniform3fv(colorUniformLocation, [0.0, 0.0, 0.0]);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+
+
+    // Raquete direita
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    setTrapezoidVertices(gl, 3.45, -0.45, 0.15, 0.15, 1.0, 0);
+    gl.uniform3fv(colorUniformLocation, [0.0, 0.0, 0.0]);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    
+    // Bolinha
+    gl.bindBuffer(gl.ARRAY_BUFFER,positionBuffer);
+    setCircleVertices(gl,n,0.1, 0.0, 0.0);
+    gl.uniform3fv(colorUniformLocation, [1.0, 0.0, 1.0]);
+    gl.drawArrays(gl.TRIANGLES, 0, 3*n);
+
+
 
     requestAnimationFrame(drawSquare);
   }
@@ -251,5 +281,55 @@ return r * 180 / Math.PI;
 function degToRad(d) {
 return d * Math.PI / 180;
 }
+
+function rotatePoint(x, y, angle) {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return [
+    x * cos - y * sin,
+    x * sin + y * cos
+  ];
+}
+
+
+// Função para definir os vértices do trapézio rotacionado
+function setTrapezoidVertices(gl, x, y, baseTop, baseBottom, height, angle) {
+  // Calcula as posições iniciais dos vértices do trapézio sem rotação
+  const x1 = x - baseBottom / 2;
+  const x2 = x + baseBottom / 2;
+  const x3 = x - baseTop / 2;
+  const x4 = x + baseTop / 2;
+  const y1 = y;
+  const y2 = y + height;
+
+  // Aplica a rotação para cada vértice em torno do ponto central (x, y)
+  const [x1r, y1r] = rotatePoint(x1 - x, y1 - y, angle);
+  const [x2r, y2r] = rotatePoint(x2 - x, y1 - y, angle);
+  const [x3r, y3r] = rotatePoint(x3 - x, y2 - y, angle);
+  const [x4r, y4r] = rotatePoint(x4 - x, y2 - y, angle);
+
+  // Adiciona os vértices rotacionados ao buffer de dados
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    x1r + x, y1r + y, // Vértice inferior esquerdo
+    x2r + x, y2r + y, // Vértice inferior direito
+    x3r + x, y3r + y, // Vértice superior esquerdo
+
+    x3r + x, y3r + y, // Vértice superior esquerdo
+    x2r + x, y2r + y, // Vértice inferior direito
+    x4r + x, y4r + y  // Vértice superior direito
+  ]), gl.STATIC_DRAW);
+}
+
+function setCircleVertices(gl,n,radius, centerX, centerY){
+  let center = [centerX, centerY];
+  let vertexData = [];
+  for(let i=0;i<n;i++){
+    vertexData.push(...center);
+    vertexData.push(centerX + radius*Math.cos(i*(2*Math.PI)/n), centerY + radius*Math.sin(i*(2*Math.PI)/n));
+    vertexData.push(centerX + radius*Math.cos((i+1)*(2*Math.PI)/n), centerY + radius*Math.sin((i+1)*(2*Math.PI)/n));
+  }
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.STATIC_DRAW);
+}
+
 
 main();
