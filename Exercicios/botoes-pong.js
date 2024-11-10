@@ -1,18 +1,18 @@
 function main() {
   const canvas = document.querySelector("#canvas");
-  const gl = canvas.getContext('webgl', { preserveDrawingBuffer: true });
+  const gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
 
   if (!gl) {
     throw new Error("WebGL not supported");
   }
 
-  var vertexShaderSource = document.querySelector("#vertex-shader-2d").text;
-  var fragmentShaderSource = document.querySelector("#fragment-shader-2d").text;
+  const vertexShaderSource = document.querySelector("#vertex-shader-2d").text;
+  const fragmentShaderSource = document.querySelector("#fragment-shader-2d").text;
 
-  var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-  var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+  const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-  var program = createProgram(gl, vertexShader, fragmentShader);
+  const program = createProgram(gl, vertexShader, fragmentShader);
 
   gl.useProgram(program);
 
@@ -73,7 +73,7 @@ function main() {
     if (downPressed) leftPaddleY = Math.max(-1.0, leftPaddleY - paddleSpeed); //controle de movimento da raquete esquerda (jogador 1)
 
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    setTrapezoidVertices(gl, -3.45, rightPaddleY, paddleWidth, paddleWidth, paddleHeight, 0);
+    setTrapezoidVertices(gl, -3.45, leftPaddleY, paddleWidth, paddleWidth, paddleHeight, 0);
     gl.uniform3fv(colorUniformLocation, [0.0, 0.0, 0.0]);
     gl.drawArrays(gl.TRIANGLES, 0, 6); //raquete esquerda (jogador 1)
 
@@ -81,7 +81,7 @@ function main() {
     if (sPressed) rightPaddleY = Math.max(-1.0, rightPaddleY - paddleSpeed); //controle de movimento da raquete direita (jogador 2)
 
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    setTrapezoidVertices(gl, 3.45, leftPaddleY, paddleWidth, paddleWidth, paddleHeight, 0);
+    setTrapezoidVertices(gl, 3.45, rightPaddleY, paddleWidth, paddleWidth, paddleHeight, 0);
     gl.uniform3fv(colorUniformLocation, [0.0, 0.0, 0.0]);
     gl.drawArrays(gl.TRIANGLES, 0, 6);  //raquete direita (jogador 2)
 
@@ -93,9 +93,9 @@ function main() {
     }
 
     if (
-      (ballX < -3.4 && ballY > leftPaddleY && ballY < leftPaddleY + paddleHeight) || (ballX > 3.4 && ballY < rightPaddleY && ballY < rightPaddleY + paddleHeight)
-    ) 
-      {
+      (ballX < -3.4 && ballY > leftPaddleY && ballY < leftPaddleY + paddleHeight) ||
+      (ballX > 3.4 && ballY > rightPaddleY && ballY < rightPaddleY + paddleHeight)
+    ) {
       ballSpeedX = -ballSpeedX;
     }  //detectando colisões com as bordas e raquetes
 
