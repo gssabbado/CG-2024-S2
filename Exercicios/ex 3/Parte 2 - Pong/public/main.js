@@ -1,18 +1,17 @@
 function main() {
   const canvas = document.querySelector("#canvas");
-  const gl = canvas.getContext('webgl', { preserveDrawingBuffer: true });
+  const gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
 
   if (!gl) {
     throw new Error("WebGL not supported");
   }
 
-  var vertexShaderSource = document.querySelector("#vertex-shader-2d").text;
-  var fragmentShaderSource = document.querySelector("#fragment-shader-2d").text;
+  const vertexShaderSource = document.querySelector("#vertex-shader-2d").text;
+  const fragmentShaderSource = document.querySelector("#fragment-shader-2d").text;
 
-  var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-  var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-
-  var program = createProgram(gl, vertexShader, fragmentShader);
+  const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+  const program = createProgram(gl, vertexShader, fragmentShader);
 
   gl.useProgram(program);
 
@@ -33,26 +32,52 @@ function main() {
   gl.clearColor(1.0, 1.0, 1.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  let ballX = 0.0,
-      ballY = 0.0;
-  let ballSpeedX = 0.02,
-      ballSpeedY = 0.02;
-  let leftPaddleY = -0.45,
-      rightPaddleY = -0.45;
-  const paddleHeight = 1.0,
-        paddleWidth = 0.15;
-  const paddleSpeed = 0.05; //velocidade de movimento das raquetes
-  const n = 50; //número de segmentos para desenhar a bola circular
+  // Configurações do jogo e do placar
+  let ballX = 0.0, ballY = 0.0;
+  let ballSpeedX = 0.02, ballSpeedY = 0.02;
+  let leftPaddleY = -0.45, rightPaddleY = -0.45;
+  const paddleHeight = 1.0, paddleWidth = 0.15;
+  const paddleSpeed = 0.05;
+  const n = 50; // Número de segmentos para desenhar a bola
 
-  let upPressed = false, downPressed = false; //status das teclas para o jogador 1 (seta up e down)
-  let wPressed = false, sPressed = false; //status das teclas para o jogador 2 (W e S)
+  let upPressed = false, downPressed = false;
+  let wPressed = false, sPressed = false;
 
+  let player1Score = 0, player2Score = 0;
+
+  // Função para atualizar o placar no canvas scoreboard
+  function atualizarPlacar() {
+    const scoreboard = document.querySelector("#scoreboard");
+    const ctx = scoreboard.getContext("2d");
+    ctx.clearRect(0, 0, scoreboard.width, scoreboard.height);
+
+    ctx.fillStyle = "black";
+    ctx.font = "48px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(player1Score, scoreboard.width / 4, scoreboard.height / 2);
+    ctx.fillText(player2Score, 3 * scoreboard.width / 4, scoreboard.height / 2);
+  }
+
+  // Função para aumentar o placar de um jogador
+  function marcarPonto(jogador) {
+    if (jogador === 1) {
+      player1Score++;
+    } else if (jogador === 2) {
+      player2Score++;
+    }
+    atualizarPlacar();
+  }
+
+  // Atualizar placar inicial
+  atualizarPlacar();
+
+  // Configuração dos eventos do teclado
   document.addEventListener("keydown", (event) => {
     if (event.key === "ArrowUp") upPressed = true;
     if (event.key === "ArrowDown") downPressed = true;
     if (event.key === "w" || event.key === "W") wPressed = true;
     if (event.key === "s" || event.key === "S") sPressed = true;
-  });  //status do teclado
+  });
 
   document.addEventListener("keyup", (event) => {
     if (event.key === "ArrowUp") upPressed = false;
@@ -61,29 +86,31 @@ function main() {
     if (event.key === "s" || event.key === "S") sPressed = false;
   });
 
+  // Função principal de renderização do jogo
   function drawGame() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
+    // Desenho da linha divisória central
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     setTrapezoidVertices(gl, 0.0, -4.0, 0.05, 0.05, 8.0, 0);
     gl.uniform3fv(colorUniformLocation, [0.2, 0.2, 0.2]);
-    gl.drawArrays(gl.TRIANGLES, 0, 6);  //linha divisória 
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
 
+    // Controle das raquetes
     if (upPressed) leftPaddleY = Math.min(1.0 - paddleHeight, leftPaddleY + paddleSpeed);
-    if (downPressed) leftPaddleY = Math.max(-1.0, leftPaddleY - paddleSpeed); //controle de movimento da raquete esquerda (jogador 1)
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    setTrapezoidVertices(gl, -3.45, rightPaddleY, paddleWidth, paddleWidth, paddleHeight, 0);
-    gl.uniform3fv(colorUniformLocation, [0.0, 0.0, 0.0]);
-    gl.drawArrays(gl.TRIANGLES, 0, 6); //raquete esquerda (jogador 1)
-
+    if (downPressed) leftPaddleY = Math.max(-1.0, leftPaddleY - paddleSpeed);
     if (wPressed) rightPaddleY = Math.min(1.0 - paddleHeight, rightPaddleY + paddleSpeed);
-    if (sPressed) rightPaddleY = Math.max(-1.0, rightPaddleY - paddleSpeed); //controle de movimento da raquete direita (jogador 2)
+    if (sPressed) rightPaddleY = Math.max(-1.0, rightPaddleY - paddleSpeed);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    setTrapezoidVertices(gl, 3.45, leftPaddleY, paddleWidth, paddleWidth, paddleHeight, 0);
+    // Desenho das raquetes
+    setTrapezoidVertices(gl, -3.45, leftPaddleY, paddleWidth, paddleWidth, paddleHeight, 0);
     gl.uniform3fv(colorUniformLocation, [0.0, 0.0, 0.0]);
-    gl.drawArrays(gl.TRIANGLES, 0, 6);  //raquete direita (jogador 2)
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    setTrapezoidVertices(gl, 3.45, rightPaddleY, paddleWidth, paddleWidth, paddleHeight, 0);
+    gl.uniform3fv(colorUniformLocation, [0.0, 0.0, 0.0]);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
 
     ballX += ballSpeedX;
     ballY += ballSpeedY;
@@ -93,18 +120,24 @@ function main() {
     }
 
     if (
-      (ballX < -3.4 && ballY > leftPaddleY && ballY < leftPaddleY + paddleHeight) || (ballX > 3.4 && ballY < rightPaddleY && ballY < rightPaddleY + paddleHeight)
-    ) 
-      {
+      (ballX < -3.4 && ballY > leftPaddleY && ballY < leftPaddleY + paddleHeight) ||
+      (ballX > 3.4 && ballY > rightPaddleY && ballY < rightPaddleY + paddleHeight)
+    ) {
       ballSpeedX = -ballSpeedX;
-    }  //detectando colisões com as bordas e raquetes
+    }
 
+    // Verificar se a bola ultrapassou as bordas laterais
     if (ballX > 4.0 || ballX < -4.0) {
+      if (ballX > 4.0) {
+        marcarPonto(1); // Ponto para o jogador 1
+      } else {
+        marcarPonto(2); // Ponto para o jogador 2
+      }
       ballX = 0.0;
       ballY = 0.0;
-    } //reset da bola se ultrapassar as bordas laterais
+      ballSpeedX = -ballSpeedX; 
+    }
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     setCircleVertices(gl, n, 0.1, ballX, ballY);
     gl.uniform3fv(colorUniformLocation, [1.0, 0.0, 1.0]);
     gl.drawArrays(gl.TRIANGLES, 0, 3 * n);
@@ -147,25 +180,23 @@ const m4 = {
   scale: function(m, sx, sy, sz) {
     return m4.multiply(m, m4.scaling(sx, sy, sz));
   },
-  translation: function(tx, ty, tz) {
-    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1];
-  },
-  scaling: function(sx, sy, sz) {
-    return [sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1];
-  },
   multiply: function(a, b) {
     const result = [];
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         result[i * 4 + j] =
           a[i * 4 + 0] * b[0 * 4 + j] +
-          a[i * 4 + 1] * b[1 * 4 + j] +
+          a[i * 4 + 1
+          * b[1 * 4 + j] +
           a[i * 4 + 2] * b[2 * 4 + j] +
           a[i * 4 + 3] * b[3 * 4 + j];
       }
     }
     return result;
-  }
+  },
+  scaling: function(sx, sy, sz) {
+    return [sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1];
+  },
 };
 
 function setTrapezoidVertices(gl, x, y, baseTop, baseBottom, height, angle) {
