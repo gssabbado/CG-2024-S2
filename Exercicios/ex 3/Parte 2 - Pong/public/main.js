@@ -92,6 +92,7 @@ function main() {
 
     // Desenho da linha divisória central
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     setTrapezoidVertices(gl, 0.0, -4.0, 0.05, 0.05, 8.0, 0);
     gl.uniform3fv(colorUniformLocation, [0.2, 0.2, 0.2]);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -186,7 +187,7 @@ const m4 = {
       for (let j = 0; j < 4; j++) {
         result[i * 4 + j] =
           a[i * 4 + 0] * b[0 * 4 + j] +
-          a[i * 4 + 1
+          a[i * 4 + 1]
           * b[1 * 4 + j] +
           a[i * 4 + 2] * b[2 * 4 + j] +
           a[i * 4 + 3] * b[3 * 4 + j];
